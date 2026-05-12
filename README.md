@@ -30,3 +30,85 @@ flowchart TD
     N --> D
     F -->|Ні| P[Очікування 2 секунди]
     P --> D
+classDiagram
+    class Block {
+        +str id
+        +int view
+        +str desc
+        +bytes img
+    }
+    class Vote {
+        +str id
+        +str block_id
+        +int voter_id
+        +datetime timestamp
+        +int source_id
+    }
+    class Person {
+        +int id
+        +str name
+        +str addr
+    }
+    class Source {
+        +int id
+        +str ip_addr
+        +str country_code
+    }
+    class ChainBuilder {
+        +list chain
+        +set votes_received
+        +process_block(block)
+        +process_vote(vote)
+        +build_chain()
+    }
+    class BlockProcessor {
+        +process_all_pending()
+        +run_loop()
+    }
+    class BlockDB {
+        +insert(block)
+        +get(id)
+    }
+    class VoteDB {
+        +insert(vote)
+        +get_all()
+    }
+    BlockProcessor --> ChainBuilder
+    BlockProcessor --> BlockDB
+    BlockProcessor --> VoteDB
+    BlockDB --> Block
+    VoteDB --> Vote
+    erDiagram
+    BLOCKS {
+        TEXT id PK
+        INTEGER view
+        TEXT desc
+        BLOB img
+    }
+    VOTES {
+        TEXT id PK
+        TEXT block_id FK
+        INTEGER voter_id
+        DATETIME timestamp
+        INTEGER source_id
+    }
+    PERSONS {
+        INTEGER id PK
+        TEXT name
+        TEXT addr
+    }
+    SOURCES {
+        INTEGER id PK
+        TEXT ip_addr
+        TEXT country_code
+    }
+    event_stream {
+        INTEGER id PK
+        TEXT type
+        TEXT entity_id
+        INTEGER processed
+        TIMESTAMP created_at
+    }
+    VOTES ||--|| BLOCKS : block_id
+    VOTES ||--|| PERSONS : voter_id
+    VOTES ||--|| SOURCES : source_id
