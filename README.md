@@ -20,8 +20,10 @@ graph TD
     F -->|Yes| G[Add block]
     F -->|No| H[Wait]
     G --> I[Chain]
+```mermaid 
 classDiagram
     Block --> ChainBuilder
     Vote --> ChainBuilder
     ChainBuilder --> BlockProcessor
+```bash
 python Lab5/main.py
