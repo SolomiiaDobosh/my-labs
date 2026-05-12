@@ -2,35 +2,36 @@
 
 ## Project Structure
 
-- **Lab2_BlockChain/** - логіка побудови ланцюга (while added algorithm)
-- **Lab3_BlockProcessor/** - SQLite база даних (BLOCKS, VOTES, PERSONS, SOURCES)
-- **Lab4_/** - OOP класи Block, Person, Source, Vote
-- **Lab5/** - event_stream таблиця, updater та processor
-- **Lab6/** - валідація pydantic + pytest тести
+- **Lab2_BlockChain/** - chain building logic (while added algorithm)
+- **Lab3_BlockProcessor/** - SQLite database (BLOCKS, VOTES, PERSONS, SOURCES)
+- **Lab4_/** - OOP classes: Block, Person, Source, Vote
+- **Lab5_/** - event_stream table, updater and processor
+- **Lab6_/** - pydantic validation + pytest tests
 
+## Flowchart Diagram
 
 ```mermaid
 flowchart TD
-    A[CSV файл] --> B[Updater]
-    B --> C[(SQLite БД)]
+    A[CSV file] --> B[Updater]
+    B --> C[(SQLite DB)]
     C --> D[event_stream]
     D --> E[BlockProcessor]
-    E --> F{Є непрочитані події?}
-    F -->|Так| G[Читаємо подію]
-    G --> H{Тип події?}
-    H -->|block| I[Отримуємо блок з BLOCKS]
-    H -->|vote| J[Додаємо голос]
+    E --> F{Unread events?}
+    F -->|Yes| G[Read event]
+    G --> H{Event type?}
+    H -->|block| I[Get block from BLOCKS]
+    H -->|vote| J[Add vote]
     I --> K[ChainBuilder]
     J --> K
-    K --> L{view == len(chain) та є голос?}
-    L -->|Так| M[Додаємо блок до ланцюга]
-    L -->|Ні| N[Чекаємо]
-    M --> O[Позначаємо подію як processed]
+    K --> L{view == len chain and vote exists?}
+    L -->|Yes| M[Add block to chain]
+    L -->|No| N[Wait]
+    M --> O[Mark event processed]
     O --> D
     N --> D
-    F -->|Ні| P[Очікування 2 секунди]
+    F -->|No| P[Wait 2 seconds]
     P --> D
-classDiagram
+    classDiagram
     class Block {
         +str id
         +int view
